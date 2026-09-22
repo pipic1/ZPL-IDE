@@ -31,6 +31,7 @@ import { DpiResolution, LabelDimensions, SnapOptions, ZplElementType } from '../
 import { dotsToMm } from '../engine/units';
 import { calculateFitZoom, calculateFullWidthZoom, getNextZoomCycle } from '../engine/zoomUtils';
 import { useTheme } from '../context/ThemeContext';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 import { MenuBar } from './MenuBar';
 
 interface ToolbarProps {
@@ -75,6 +76,7 @@ interface ToolbarProps {
   onInsert: (type: ZplElementType) => void;
   onToggleRulerUnit: () => void;
   onShowShortcuts: () => void;
+  onOpenPWAInstall?: () => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -117,8 +119,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onInsert,
   onToggleRulerUnit,
   onShowShortcuts,
+  onOpenPWAInstall,
 }) => {
   const { theme, resolvedTheme, setTheme } = useTheme();
+  const { isInstalled } = usePWAInstall();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showSnapMenu, setShowSnapMenu] = useState(false);
@@ -196,6 +200,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           snapToGrid={snapOptions.snapToGrid}
           onToggleSnap={() => onUpdateSnapOptions({ snapToGrid: !snapOptions.snapToGrid })}
           onShowShortcuts={onShowShortcuts}
+          onOpenPWAInstall={onOpenPWAInstall}
         />
       </div>
 
@@ -507,6 +512,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             </>
           )}
         </div>
+
+        {/* PWA Install Button */}
+        {onOpenPWAInstall && !isInstalled && (
+          <button
+            id="toolbar-pwa-install-btn"
+            onClick={onOpenPWAInstall}
+            className="flex items-center gap-1.5 px-2 py-1 rounded-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:text-emerald-300 text-xs font-semibold border border-emerald-300 dark:border-emerald-800/80 transition whitespace-nowrap shrink-0 shadow-2xs"
+            title="Installer ZPL Studio sur votre ordinateur ou mobile (PWA)"
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap hidden sm:inline-block">Install App</span>
+          </button>
+        )}
 
         <button
           id="toolbar-copy-zpl-btn"

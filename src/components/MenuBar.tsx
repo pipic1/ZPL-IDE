@@ -98,6 +98,7 @@ interface MenuBarProps {
   onToggleSnap: () => void;
 
   onShowShortcuts: () => void;
+  onOpenPWAInstall?: () => void;
 }
 
 export const MenuBar: React.FC<MenuBarProps> = ({
@@ -145,6 +146,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
   snapToGrid,
   onToggleSnap,
   onShowShortcuts,
+  onOpenPWAInstall,
 }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
@@ -351,6 +353,22 @@ export const MenuBar: React.FC<MenuBarProps> = ({
                 <span>Label Size & DPI Settings...</span>
               </span>
             </button>
+
+            {onOpenPWAInstall && (
+              <>
+                <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />
+                <button
+                  onClick={() => handleAction(onOpenPWAInstall)}
+                  className="w-full flex items-center justify-between px-2 py-1.5 rounded-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition text-emerald-600 dark:text-emerald-400 font-medium"
+                >
+                  <span className="flex items-center gap-2">
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Install ZPL Studio (PWA)...</span>
+                  </span>
+                  <span className="text-[10px] text-emerald-500 font-mono">PWA</span>
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -872,6 +890,22 @@ export const MenuBar: React.FC<MenuBarProps> = ({
                 <span>Zebra ZPL II Manual</span>
               </span>
             </a>
+
+            {onOpenPWAInstall && (
+              <>
+                <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />
+                <button
+                  onClick={() => handleAction(onOpenPWAInstall)}
+                  className="w-full flex items-center justify-between px-2 py-1.5 rounded-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition text-emerald-600 dark:text-emerald-400 font-medium"
+                >
+                  <span className="flex items-center gap-2">
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Install App (PWA Guide)...</span>
+                  </span>
+                  <span className="text-[10px] text-emerald-500 font-mono">Offline</span>
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>

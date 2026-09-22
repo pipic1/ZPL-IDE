@@ -13,6 +13,7 @@ import {
   getNextZoomCycle,
   ZoomCycleMode,
 } from '../engine/zoomUtils';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 interface StatusBarProps {
   dimensions: LabelDimensions;
@@ -26,6 +27,7 @@ interface StatusBarProps {
   snapOptions: SnapOptions;
   zplCode?: string;
   lineCount?: number;
+  onOpenPWAInstall?: () => void;
 }
 
 export const StatusBar: React.FC<StatusBarProps> = ({
@@ -40,8 +42,10 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   snapOptions,
   zplCode,
   lineCount,
+  onOpenPWAInstall,
 }) => {
   const [zoomCycleMode, setZoomCycleMode] = useState<ZoomCycleMode>('100');
+  const isOnline = useOnlineStatus();
 
   const widthMm = dotsToMm(dimensions.widthDots, dimensions.dpi);
   const heightMm = dotsToMm(dimensions.heightDots, dimensions.dpi);
@@ -275,6 +279,28 @@ export const StatusBar: React.FC<StatusBarProps> = ({
         <span className="text-zinc-300 dark:text-zinc-700">|</span>
 
         <span className="text-zinc-400 dark:text-zinc-500 uppercase">UTF-8</span>
+
+        <span className="text-zinc-300 dark:text-zinc-700">|</span>
+
+        {/* PWA & Network Connectivity Status */}
+        {!isOnline ? (
+          <span
+            className="flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400"
+            title="Mode Hors-ligne : ZPL Studio fonctionne à 100% sans connexion internet"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>Offline</span>
+          </span>
+        ) : (
+          <button
+            onClick={onOpenPWAInstall}
+            className="flex items-center gap-1 text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition cursor-pointer"
+            title="PWA installable & prête pour le mode autonome/hors-ligne"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>PWA</span>
+          </button>
+        )}
       </div>
     </footer>
   );

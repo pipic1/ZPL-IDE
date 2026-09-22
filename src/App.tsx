@@ -16,6 +16,8 @@ import { ContextMenu } from './components/ContextMenu';
 import { ImageModal } from './components/ImageModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { LibraryModal } from './components/LibraryModal';
+import { PWAInstallModal } from './components/PWAInstallModal';
+import { useOnlineStatus } from './hooks/useOnlineStatus';
 import {
   downloadZplFile,
   downloadPng,
@@ -58,6 +60,8 @@ export default function App() {
   const [isLibraryModalOpen, setIsLibraryModalOpen] = useState<boolean>(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState<boolean>(false);
+  const [isPWAModalOpen, setIsPWAModalOpen] = useState<boolean>(false);
+  const isOnline = useOnlineStatus();
   const [copiedZpl, setCopiedZpl] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
@@ -581,6 +585,7 @@ export default function App() {
         onInsert={handleInsert}
         onToggleRulerUnit={handleToggleRulerUnit}
         onShowShortcuts={() => setIsShortcutsModalOpen(true)}
+        onOpenPWAInstall={() => setIsPWAModalOpen(true)}
       />
 
       {/* Main Workspace */}
@@ -684,6 +689,7 @@ export default function App() {
         cursorPos={cursorPos}
         snapOptions={snapOptions}
         zplCode={state.zplCode}
+        onOpenPWAInstall={() => setIsPWAModalOpen(true)}
       />
 
       {/* Right-Click Context Menu */}
@@ -751,6 +757,20 @@ export default function App() {
         isOpen={isShortcutsModalOpen}
         onClose={() => setIsShortcutsModalOpen(false)}
       />
+
+      {/* Progressive Web App (PWA) Install Modal */}
+      <PWAInstallModal
+        isOpen={isPWAModalOpen}
+        onClose={() => setIsPWAModalOpen(false)}
+      />
+
+      {/* Offline Status Floating Alert */}
+      {!isOnline && (
+        <div className="fixed bottom-9 left-4 z-40 flex items-center gap-2 px-3 py-1.5 bg-amber-600 text-white rounded-md shadow-xl text-xs font-medium border border-amber-500 animate-in fade-in slide-in-from-bottom-2">
+          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          <span>Mode Hors-ligne — ZPL Studio fonctionne à 100% avec les données en cache locale.</span>
+        </div>
+      )}
 
       {/* Floating Notification Toast */}
       {toastMessage && (
