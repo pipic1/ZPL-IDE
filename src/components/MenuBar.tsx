@@ -42,6 +42,8 @@ import {
   ChevronRight,
   Check,
   HardDrive,
+  Scan,
+  MoveHorizontal,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { ZplElementType } from '../types/zpl';
@@ -85,6 +87,9 @@ interface MenuBarProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
+  onFitZoom?: () => void;
+  onFullWidthZoom?: () => void;
+  onCycleZoom?: () => void;
   showRulers: boolean;
   onToggleRulers: () => void;
   rulerUnit: 'dots' | 'mm';
@@ -130,6 +135,9 @@ export const MenuBar: React.FC<MenuBarProps> = ({
   onZoomIn,
   onZoomOut,
   onResetZoom,
+  onFitZoom,
+  onFullWidthZoom,
+  onCycleZoom,
   showRulers,
   onToggleRulers,
   rulerUnit,
@@ -707,8 +715,46 @@ export const MenuBar: React.FC<MenuBarProps> = ({
                 <Maximize2 className="w-3.5 h-3.5 text-zinc-500" />
                 <span>Reset Zoom (100%)</span>
               </span>
-              <span className="text-[10px] font-mono text-zinc-600 dark:text-zinc-400">{Math.round(zoom * 100)}%</span>
+              <kbd className="text-[10px] font-mono text-zinc-600 dark:text-zinc-400">Ctrl+0</kbd>
             </button>
+
+            {onFitZoom && (
+              <button
+                onClick={() => handleAction(onFitZoom)}
+                className="w-full flex items-center justify-between px-2 py-1.5 rounded-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition"
+              >
+                <span className="flex items-center gap-2">
+                  <Scan className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Fit to Window</span>
+                </span>
+                <span className="text-[10px] text-zinc-400">Fit</span>
+              </button>
+            )}
+
+            {onFullWidthZoom && (
+              <button
+                onClick={() => handleAction(onFullWidthZoom)}
+                className="w-full flex items-center justify-between px-2 py-1.5 rounded-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition"
+              >
+                <span className="flex items-center gap-2">
+                  <MoveHorizontal className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Full Width</span>
+                </span>
+                <span className="text-[10px] text-zinc-400">Width</span>
+              </button>
+            )}
+
+            {onCycleZoom && (
+              <button
+                onClick={() => handleAction(onCycleZoom)}
+                className="w-full flex items-center justify-between px-2 py-1.5 rounded-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left transition"
+              >
+                <span className="flex items-center gap-2">
+                  <Maximize2 className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Cycle Zoom (100% / Fit / Width)</span>
+                </span>
+              </button>
+            )}
 
             <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />
 

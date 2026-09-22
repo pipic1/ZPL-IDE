@@ -23,6 +23,7 @@ import {
   downloadPdf,
 } from './engine/exporter';
 import { saveCurrentSession, getSavedSession, saveProject, saveToDisk } from './engine/storage';
+import { getNextZoomCycle } from './engine/zoomUtils';
 import { SnapOptions, ZplElement, ZplElementType, ZplGraphicElement, LabelProject } from './types/zpl';
 import { Save, HardDrive, Download } from 'lucide-react';
 
@@ -495,11 +496,38 @@ export default function App() {
         handleExportPdf();
         return;
       }
+
+      // Zoom Cycle (Ctrl+0): 100% -> fit -> full-width -> loop
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        const next = getNextZoomCycle(
+          zoom,
+          state.ast.dimensions.widthDots,
+          state.ast.dimensions.heightDots,
+          snapOptions.showRulers
+        );
+        setZoom(next.zoom);
+        return;
+      }
+
+      // Zoom In (Ctrl++ or Ctrl+=)
+      if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) {
+        e.preventDefault();
+        setZoom((z) => Math.min(3, z + 0.1));
+        return;
+      }
+
+      // Zoom Out (Ctrl+-)
+      if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+        e.preventDefault();
+        setZoom((z) => Math.max(0.2, z - 0.1));
+        return;
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [state.zplCode, state.ast]);
+  }, [state.zplCode, state.ast, zoom, snapOptions.showRulers]);
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 font-sans">
@@ -650,6 +678,9 @@ export default function App() {
         elementCount={state.ast.elements.length}
         selectedCount={state.selectedElementIds.length}
         zoom={zoom}
+        onZoomChange={setZoom}
+        activeView={activeView}
+        onChangeView={setActiveView}
         cursorPos={cursorPos}
         snapOptions={snapOptions}
         zplCode={state.zplCode}

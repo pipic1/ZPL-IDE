@@ -7,9 +7,6 @@ import React, { useState } from 'react';
 import {
   Undo2,
   Redo2,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
   Magnet,
   Download,
   Copy,
@@ -29,10 +26,10 @@ import {
   Moon,
   Monitor,
   Save,
-  HardDrive,
 } from 'lucide-react';
 import { DpiResolution, LabelDimensions, SnapOptions, ZplElementType } from '../types/zpl';
 import { dotsToMm } from '../engine/units';
+import { calculateFitZoom, calculateFullWidthZoom, getNextZoomCycle } from '../engine/zoomUtils';
 import { useTheme } from '../context/ThemeContext';
 import { MenuBar } from './MenuBar';
 
@@ -177,6 +174,21 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onZoomIn={() => onZoomChange(Math.min(3, zoom + 0.1))}
           onZoomOut={() => onZoomChange(Math.max(0.2, zoom - 0.1))}
           onResetZoom={() => onZoomChange(1)}
+          onFitZoom={() =>
+            onZoomChange(calculateFitZoom(dimensions.widthDots, dimensions.heightDots, snapOptions.showRulers))
+          }
+          onFullWidthZoom={() =>
+            onZoomChange(calculateFullWidthZoom(dimensions.widthDots, snapOptions.showRulers))
+          }
+          onCycleZoom={() => {
+            const next = getNextZoomCycle(
+              zoom,
+              dimensions.widthDots,
+              dimensions.heightDots,
+              snapOptions.showRulers
+            );
+            onZoomChange(next.zoom);
+          }}
           showRulers={snapOptions.showRulers}
           onToggleRulers={() => onUpdateSnapOptions({ showRulers: !snapOptions.showRulers })}
           rulerUnit={snapOptions.rulerUnit}
@@ -216,39 +228,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           </button>
         </div>
 
-        {/* Local Storage Library */}
-        {onOpenLibrary && (
-          <button
-            onClick={onOpenLibrary}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-sm bg-white hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-800 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white text-xs border border-zinc-300 dark:border-zinc-800 transition whitespace-nowrap shrink-0 shadow-2xs font-medium"
-            title="Open Local Storage Label Library (Ctrl+L)"
-          >
-            <HardDrive className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-            <span className="hidden md:inline-block font-medium">Library</span>
-          </button>
-        )}
-
         {/* Quick Save Local */}
         <button
           onClick={onSaveLocal}
-          className="flex items-center gap-1 px-2 py-1 rounded-sm bg-white hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-800 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white text-xs border border-zinc-300 dark:border-zinc-800 transition whitespace-nowrap shrink-0 shadow-2xs"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-white hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-800 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white text-xs border border-zinc-300 dark:border-zinc-800 transition whitespace-nowrap shrink-0 shadow-2xs font-medium"
           title="Save to browser local storage (Ctrl+S)"
         >
           <Save className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span className="hidden md:inline-block font-medium">Save</span>
+          <span>Save</span>
         </button>
-
-        {/* Save on Disk */}
-        {onSaveToDisk && (
-          <button
-            onClick={onSaveToDisk}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-sm bg-white hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-800 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white text-xs border border-zinc-300 dark:border-zinc-800 transition whitespace-nowrap shrink-0 shadow-2xs font-medium"
-            title="Save label directly to computer disk (.zpl)"
-          >
-            <Download className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
-            <span className="hidden lg:inline-block font-medium">Save on Disk</span>
-          </button>
-        )}
 
         {/* Magnetic Snapping & Grid Dropdown Options */}
         <div className="relative shrink-0">
@@ -440,94 +428,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             </button>
           </div>
         )}
-
-        {/* Zoom controls with Zoom Select */}
-        <div className="flex items-center bg-zinc-200/80 dark:bg-zinc-950 p-0.5 rounded-sm border border-zinc-300 dark:border-zinc-800 font-mono shrink-0">
-          <button
-            onClick={() => onZoomChange(Math.max(0.2, zoom - 0.1))}
-            className="p-1 rounded-sm text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition"
-            title="Zoom Out (Ctrl+-)"
-          >
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Interactive Zoom Select */}
-          <div className="relative flex items-center">
-            <select
-              id="toolbar-zoom-select"
-              value={
-                [25, 50, 75, 85, 100, 125, 150, 200, 250, 300].includes(Math.round(zoom * 100))
-                  ? Math.round(zoom * 100)
-                  : 'custom'
-              }
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                if (!isNaN(val)) {
-                  onZoomChange(val / 100);
-                }
-              }}
-              className="bg-transparent text-[11px] font-mono text-zinc-700 dark:text-zinc-300 px-1 py-0.5 rounded cursor-pointer hover:bg-zinc-300/50 dark:hover:bg-zinc-800 focus:outline-none appearance-none text-center min-w-[42px]"
-              title="Select zoom level"
-            >
-              {[25, 50, 75, 85, 100, 125, 150, 200, 250, 300].map((pct) => (
-                <option key={pct} value={pct} className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">
-                  {pct}%
-                </option>
-              ))}
-              {![25, 50, 75, 85, 100, 125, 150, 200, 250, 300].includes(Math.round(zoom * 100)) && (
-                <option value="custom" className="bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200">
-                  {Math.round(zoom * 100)}%
-                </option>
-              )}
-            </select>
-          </div>
-
-          <button
-            onClick={() => onZoomChange(Math.min(3, zoom + 0.1))}
-            className="p-1 rounded-sm text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition"
-            title="Zoom In (Ctrl++)"
-          >
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => onZoomChange(1)}
-            className="p-1 rounded-sm text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition"
-            title="Reset Zoom (100%)"
-          >
-            <Maximize2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {/* View mode toggle (VS Code layout tabs style) */}
-        <div className="flex items-center bg-zinc-200/80 dark:bg-zinc-950 p-0.5 rounded-sm border border-zinc-300 dark:border-zinc-800 text-xs shrink-0">
-          <button
-            onClick={() => onChangeView('both')}
-            className={`px-2 py-0.5 rounded-sm font-medium transition whitespace-nowrap shrink-0 ${
-              activeView === 'both' ? 'bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-white' : 'text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-200'
-            }`}
-            title="Split Visual Canvas + ZPL Code"
-          >
-            Split
-          </button>
-          <button
-            onClick={() => onChangeView('canvas')}
-            className={`px-2 py-0.5 rounded-sm font-medium transition whitespace-nowrap shrink-0 ${
-              activeView === 'canvas' ? 'bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-white' : 'text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-200'
-            }`}
-            title="Canvas Mode"
-          >
-            Canvas
-          </button>
-          <button
-            onClick={() => onChangeView('code')}
-            className={`px-2 py-0.5 rounded-sm font-medium transition whitespace-nowrap shrink-0 ${
-              activeView === 'code' ? 'bg-white text-zinc-900 shadow-2xs dark:bg-zinc-800 dark:text-white' : 'text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-200'
-            }`}
-            title="ZPL Code Mode"
-          >
-            Code
-          </button>
-        </div>
       </div>
 
       {/* Right Actions: Theme, Copy, Export */}

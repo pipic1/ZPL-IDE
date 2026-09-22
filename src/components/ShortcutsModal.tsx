@@ -48,6 +48,8 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose 
       { key: 'Escape', desc: 'Deselect / close active modal' },
     ]},
     { cat: 'Navigation & View', items: [
+      { key: 'Ctrl + 0', desc: 'Cycle Zoom: 100% / Fit / Full Width' },
+      { key: 'Ctrl + + / -', desc: 'Zoom in / out on label' },
       { key: 'Space + Drag', desc: 'Pan / drag around the canvas' },
       { key: 'Middle Mouse Drag', desc: 'Pan canvas in any direction' },
       { key: 'Right Click', desc: 'Open context menu with quick actions' },
