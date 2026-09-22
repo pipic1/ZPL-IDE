@@ -57,7 +57,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
         <div className="h-8 px-3 border-b border-zinc-800 bg-zinc-950/60 flex items-center gap-2 text-zinc-300 shrink-0">
           <Sliders className="w-3.5 h-3.5 text-emerald-400" />
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300">
-            Propriétés Étiquette
+            Label Properties
           </span>
         </div>
 
@@ -65,24 +65,24 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           {/* Dimension specs */}
           <div className="bg-zinc-950 rounded-sm p-2.5 border border-zinc-800 space-y-1.5 font-mono text-xs">
             <div className="flex justify-between">
-              <span className="text-zinc-500">Dimensions :</span>
+              <span className="text-zinc-500">Dimensions:</span>
               <span className="text-zinc-200">
                 {dimensions.widthDots}×{dimensions.heightDots} pt
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Taille mm :</span>
+              <span className="text-zinc-500">Physical Size:</span>
               <span className="text-zinc-200">
                 {dotsToMm(dimensions.widthDots, dimensions.dpi)}×{dotsToMm(dimensions.heightDots, dimensions.dpi)} mm
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Résolution :</span>
+              <span className="text-zinc-500">Resolution:</span>
               <span className="text-emerald-400 font-bold">{dimensions.dpi} DPI</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Éléments :</span>
-              <span className="text-zinc-200">{elements.length} objets</span>
+              <span className="text-zinc-500">Elements:</span>
+              <span className="text-zinc-200">{elements.length} items</span>
             </div>
           </div>
 
@@ -91,14 +91,14 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
             <div className="flex items-center gap-1.5 mb-1.5 px-0.5 text-zinc-400">
               <Layers className="w-3 h-3 text-zinc-400" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
-                Calques ({elements.length})
+                Layers ({elements.length})
               </span>
             </div>
 
             <div className="space-y-0.5">
               {elements.length === 0 ? (
                 <div className="text-center py-6 text-zinc-500 text-xs font-mono">
-                  Aucun élément
+                  No elements on label
                 </div>
               ) : (
                 elements.map((el) => (
@@ -162,11 +162,11 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           {getElementIcon(selectedElement.type)}
           <span className="text-[10px] font-mono font-bold text-zinc-200 uppercase tracking-wider">
             {selectedElement.type === 'text'
-              ? 'Texte (^A0)'
+              ? 'Text (^A0)'
               : selectedElement.type === 'box'
-              ? 'Cadre (^GB)'
+              ? 'Box Frame (^GB)'
               : selectedElement.type === 'line'
-              ? 'Ligne (^GB)'
+              ? 'Line (^GB)'
               : selectedElement.type === 'barcode128'
               ? 'Code 128 (^BC)'
               : selectedElement.type === 'barcode39'
@@ -181,14 +181,14 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <button
             onClick={() => onDuplicateElement(selectedElement.id)}
             className="p-1 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
-            title="Dupliquer l'élément"
+            title="Duplicate element"
           >
             <Copy className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => onDeleteElement(selectedElement.id)}
             className="p-1 rounded-sm text-rose-400 hover:text-rose-200 hover:bg-zinc-800 transition"
-            title="Supprimer l'élément"
+            title="Delete element"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
@@ -199,11 +199,11 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
         {/* Position & Alignment */}
         <div>
           <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
-            Position (pt / mm)
+            Position (dots / mm)
           </span>
           <div className="grid grid-cols-2 gap-1.5 mb-1.5">
             <div>
-              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">X (pt)</label>
+              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">X (dots)</label>
               <input
                 type="number"
                 value={selectedElement.x}
@@ -215,7 +215,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
               </span>
             </div>
             <div>
-              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Y (pt)</label>
+              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Y (dots)</label>
               <input
                 type="number"
                 value={selectedElement.y}
@@ -232,15 +232,15 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <div className="flex gap-1">
             <button
               onClick={() => updateProp('x', Math.round((dimensions.widthDots - 200) / 2))}
-              className="flex-1 py-0.5 px-1.5 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-[10px] text-zinc-300 font-mono"
+              className="flex-1 py-0.5 px-1.5 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-[10px] text-zinc-300 font-mono whitespace-nowrap"
             >
-              Centrer H
+              Center X
             </button>
             <button
               onClick={() => updateProp('y', Math.round((dimensions.heightDots - 100) / 2))}
-              className="flex-1 py-0.5 px-1.5 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-[10px] text-zinc-300 font-mono"
+              className="flex-1 py-0.5 px-1.5 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-[10px] text-zinc-300 font-mono whitespace-nowrap"
             >
-              Centrer V
+              Center Y
             </button>
           </div>
         </div>
@@ -279,7 +279,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <div className="space-y-2">
             <div>
               <label className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">
-                Texte (^FD)
+                Text Content (^FD)
               </label>
               <textarea
                 value={(selectedElement as ZplTextElement).text || ''}
@@ -291,7 +291,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
 
             <div className="grid grid-cols-2 gap-1.5">
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Hauteur pt</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Font Height</label>
                 <input
                   type="number"
                   value={(selectedElement as ZplTextElement).fontHeight}
@@ -302,7 +302,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
                 />
               </div>
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Largeur pt</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Font Width</label>
                 <input
                   type="number"
                   value={(selectedElement as ZplTextElement).fontWidth}
@@ -323,7 +323,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
                 className="rounded-sm bg-zinc-800 border-zinc-700 text-emerald-500 focus:ring-0"
               />
               <label htmlFor="check-inverted" className="text-xs text-zinc-300 font-mono">
-                Texte inversé (^FR)
+                Inverted Text (^FR)
               </label>
             </div>
           </div>
@@ -334,7 +334,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-1.5">
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Largeur (pt)</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Width (dots)</label>
                 <input
                   type="number"
                   value={(selectedElement as ZplBoxElement).width}
@@ -345,7 +345,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
                 />
               </div>
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Hauteur (pt)</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Height (dots)</label>
                 <input
                   type="number"
                   value={(selectedElement as ZplBoxElement).height}
@@ -358,7 +358,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
             </div>
 
             <div>
-              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Épaisseur bordure (pt)</label>
+              <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Border Thickness</label>
               <input
                 type="number"
                 value={(selectedElement as ZplBoxElement).borderThickness}
@@ -371,7 +371,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
 
             {selectedElement.type === 'box' && (
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Arrondi angles (0 à 8)</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Corner Rounding (0 to 8)</label>
                 <input
                   type="number"
                   min="0"
@@ -395,7 +395,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <div className="space-y-2">
             <div>
               <label className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">
-                Données (^FD)
+                Barcode Data (^FD)
               </label>
               <input
                 type="text"
@@ -407,7 +407,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
 
             <div className="grid grid-cols-2 gap-1.5">
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Hauteur barres</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Bar Height</label>
                 <input
                   type="number"
                   value={(selectedElement as any).height}
@@ -418,7 +418,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
                 />
               </div>
               <div>
-                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Module width</label>
+                <label className="text-[9px] text-zinc-400 block mb-0.5 font-mono">Module Width</label>
                 <input
                   type="number"
                   min="1"
@@ -441,7 +441,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
                 className="rounded-sm bg-zinc-800 border-zinc-700 text-emerald-500 focus:ring-0"
               />
               <label htmlFor="check-human-read" className="text-xs text-zinc-300 font-mono">
-                Texte lisible en clair
+                Human-readable Text
               </label>
             </div>
           </div>
@@ -452,7 +452,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
           <div className="space-y-2">
             <div>
               <label className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1">
-                Contenu QR Code (^FD)
+                QR Code Data (^FD)
               </label>
               <textarea
                 value={(selectedElement as ZplQrCodeElement).data || ''}
@@ -464,7 +464,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
 
             <div>
               <div className="flex justify-between text-[9px] text-zinc-400 mb-0.5 font-mono">
-                <span>Facteur d'échelle :</span>
+                <span>Magnification:</span>
                 <span>{(selectedElement as ZplQrCodeElement).magnification}x</span>
               </div>
               <input
@@ -478,7 +478,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
             </div>
 
             <div>
-              <label className="text-[9px] text-zinc-400 block mb-1 font-mono">Correction d'erreur</label>
+              <label className="text-[9px] text-zinc-400 block mb-1 font-mono">Error Correction</label>
               <div className="grid grid-cols-4 gap-1">
                 {['L', 'M', 'Q', 'H'].map((lvl) => (
                   <button
@@ -501,34 +501,34 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({
         {/* Layer reordering */}
         <div>
           <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
-            Ordre des Calques
+            Layer Order
           </span>
           <div className="grid grid-cols-4 gap-1">
             <button
               onClick={() => moveLayer('up')}
               className="py-1 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 flex items-center justify-center"
-              title="Avancer d'un plan"
+              title="Bring forward"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => moveLayer('down')}
               className="py-1 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 flex items-center justify-center"
-              title="Reculer d'un plan"
+              title="Send backward"
             >
               <ArrowDown className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => moveLayer('top')}
               className="py-1 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 flex items-center justify-center"
-              title="Premier plan"
+              title="Bring to front"
             >
               <ChevronsUp className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => moveLayer('bottom')}
               className="py-1 rounded-sm bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 flex items-center justify-center"
-              title="Arrière plan"
+              title="Send to back"
             >
               <ChevronsDown className="w-3.5 h-3.5" />
             </button>

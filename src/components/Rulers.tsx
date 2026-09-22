@@ -98,7 +98,7 @@ export const Rulers: React.FC<RulersProps> = ({
         {/* Unit toggle corner */}
         <button
           onClick={onToggleUnit}
-          title={`Unité active: ${unit === 'dots' ? 'Points (Dots)' : 'Millimètres (mm)'}. Cliquez pour basculer.`}
+          title={`Active unit: ${unit === 'dots' ? 'Dots (pt)' : 'Millimeters (mm)'}. Click to toggle.`}
           className="w-6 h-6 bg-zinc-900 hover:bg-zinc-800 border-r border-b border-zinc-700/80 text-[10px] font-bold font-mono text-emerald-400 flex items-center justify-center shrink-0 transition"
         >
           {unit === 'dots' ? 'pt' : 'mm'}

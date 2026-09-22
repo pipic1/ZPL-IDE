@@ -10,7 +10,6 @@ import {
   Wand2,
   Copy,
   Check,
-  Terminal,
 } from 'lucide-react';
 import { parseZpl } from '../engine/zplParser';
 import { generateZpl } from '../engine/zplGenerator';
@@ -75,35 +74,35 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
         {/* Active Tab */}
         <div className="h-full px-3 bg-zinc-900 border-r border-zinc-800 border-t-2 border-t-emerald-500 flex items-center gap-1.5 text-xs font-mono text-zinc-200">
           <FileCode className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="font-medium">etiquette.zpl</span>
-          <span className="text-[10px] text-zinc-500">({lines.length} l.)</span>
+          <span className="font-medium">label.zpl</span>
+          <span className="text-[10px] text-zinc-500">({lines.length} lines)</span>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={handleFormat}
-            className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-mono border border-zinc-700/80 transition"
-            title="Formater et réordonner le code ZPL"
+            className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-mono border border-zinc-700/80 transition whitespace-nowrap shrink-0"
+            title="Format and reorder ZPL code"
           >
-            <Wand2 className="w-3 h-3 text-emerald-400" />
-            <span>Formater</span>
+            <Wand2 className="w-3 h-3 text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap">Format</span>
           </button>
 
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-mono border border-zinc-700/80 transition"
-            title="Copier le code"
+            className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-mono border border-zinc-700/80 transition whitespace-nowrap shrink-0"
+            title="Copy code"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-emerald-400" />
-                <span className="text-emerald-400">Copié</span>
+                <Check className="w-3 h-3 text-emerald-400 shrink-0" />
+                <span className="text-emerald-400 whitespace-nowrap">Copied</span>
               </>
             ) : (
               <>
-                <Copy className="w-3 h-3 text-zinc-400" />
-                <span>Copier</span>
+                <Copy className="w-3 h-3 text-zinc-400 shrink-0" />
+                <span className="whitespace-nowrap">Copy</span>
               </>
             )}
           </button>
@@ -121,13 +120,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
       {/* Quick Snippets Bar */}
       <div className="h-6.5 px-2 bg-[#161618] border-b border-zinc-800 flex items-center gap-1 overflow-x-auto text-[10px] font-mono shrink-0">
         <span className="text-zinc-500 uppercase text-[9px] shrink-0 font-sans font-bold px-1">
-          Insérer :
+          Insert:
         </span>
         <button
-          onClick={() => insertSnippet('\n^FO100,100^A0N,32,32^FDTexte simple^FS\n')}
+          onClick={() => insertSnippet('\n^FO100,100^A0N,32,32^FDSample text^FS\n')}
           className="px-1.5 py-0.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition shrink-0"
         >
-          ^A0 (Texte)
+          ^A0 (Text)
         </button>
         <button
           onClick={() => insertSnippet('\n^FO100,100^BY2,3,70^BCN,70,Y,N,N^FDEXP-123456^FS\n')}
@@ -145,13 +144,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           onClick={() => insertSnippet('\n^FO100,100^GB300,120,4,B,0^FS\n')}
           className="px-1.5 py-0.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition shrink-0"
         >
-          ^GB (Cadre)
+          ^GB (Box)
         </button>
         <button
-          onClick={() => insertSnippet('\n^FO100,100^FR^A0N,32,32^FDTEXTE INVERSÉ^FS\n')}
+          onClick={() => insertSnippet('\n^FO100,100^FR^A0N,32,32^FDINVERTED TEXT^FS\n')}
           className="px-1.5 py-0.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition shrink-0"
         >
-          ^FR (Inversé)
+          ^FR (Invert)
         </button>
       </div>
 
@@ -175,7 +174,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
           onScroll={handleScroll}
           spellCheck={false}
           className="flex-1 p-3 bg-transparent text-emerald-400 font-mono text-xs leading-5 resize-none focus:outline-none overflow-auto whitespace-pre selection:bg-emerald-950/80"
-          placeholder="Entrez votre code ZPL (^XA ... ^XZ)"
+          placeholder="Enter ZPL code (^XA ... ^XZ)"
         />
       </div>
     </div>

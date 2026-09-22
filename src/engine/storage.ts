@@ -10,9 +10,9 @@ const AUTOSAVE_KEY = 'zpl_studio_current_session';
 
 export const BUILT_IN_TEMPLATES: { name: string; description: string; category: string; zpl: string }[] = [
   {
-    name: 'Logistique Transport (4x6")',
-    category: 'Logistique',
-    description: 'Bordereau expédition standard 100x150mm avec Code 128 et QR Code de suivi',
+    name: 'Logistics Shipping Label (4x6")',
+    category: 'Logistics',
+    description: 'Standard 100x150mm shipping label with Code 128 barcode and tracking QR code',
     zpl: `^XA
 ^CI28
 ^PW812
@@ -27,44 +27,44 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^FDEXPRESS LOGISTICS^FS
 ^FO80,220
 ^A0N,28,28
-^FDDESTINATAIRE :^FS
+^FDSHIP TO:^FS
 ^FO80,260
 ^A0N,36,36
-^FDPIERRE PICARD^FS
+^FDJOHN DOE^FS
 ^FO80,310
 ^A0N,28,28
-^FD12 RUE DE LA PAIX\\&75002 PARIS - FRANCE^FS
+^FD100 MAIN STREET\\&SPRINGFIELD, IL 62701 - USA^FS
 ^FO80,390
 ^GB652,4,4,B,0^FS
 ^FO80,420
 ^A0N,26,26
-^FDNUMERO DE SUIVI INTERNATIONAL :^FS
+^FDINTERNATIONAL TRACKING NUMBER:^FS
 ^FO80,460
 ^BY3,3,110
 ^BCN,110,Y,N,N
-^FDEXP-789456123-FR^FS
+^FDEXP-789456123-US^FS
 ^FO80,630
 ^GB652,4,4,B,0^FS
 ^FO80,660
 ^BQN,2,6,M
-^FDQA,https://zplstudio.app/track/EXP-789456123-FR^FS
+^FDQA,https://zplstudio.app/track/EXP-789456123-US^FS
 ^FO270,680
 ^A0N,32,32
-^FDSIGNATURE ELECTRONIQUE^FS
+^FDELECTRONIC SIGNATURE^FS
 ^FO270,725
 ^A0N,24,24
-^FDScannez le QR Code pour valider\\&la reception conforme du colis.^FS
+^FDScan QR code to confirm delivery\\&and inspect parcel receipt.^FS
 ^FO80,910
 ^GB652,4,4,B,0^FS
 ^FO80,940
 ^A0N,24,24
-^FDPoids: 4.25 KG  |  Service: EXPRESS J+1  |  Tri: HUB-01^FS
+^FDWeight: 4.25 KG  |  Service: PRIORITY NEXT DAY  |  Hub: ORD-01^FS
 ^XZ`,
   },
   {
-    name: 'Inventaire Matériel & Asset Tag (2x1")',
-    category: 'Industrie',
-    description: 'Étiquette compacte 50x25mm avec QR Code haute densité et Code 39',
+    name: 'Hardware Asset Tag (2x1")',
+    category: 'Manufacturing',
+    description: 'Compact 50x25mm equipment label with high-density QR Code and Code 39',
     zpl: `^XA
 ^CI28
 ^PW406
@@ -76,13 +76,13 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^FDQA,ASSET-90442-DELL^FS
 ^FO150,35
 ^A0N,24,24
-^FDPARCS IT - ASSET TAG^FS
+^FDIT ASSET MANAGEMENT^FS
 ^FO150,68
 ^A0N,20,20
 ^FDDell Latitude 7440^FS
 ^FO150,96
 ^A0N,18,18
-^FDS/N: 8F29X14-FR^FS
+^FDS/N: 8F29X14-US^FS
 ^FO150,130
 ^BY2,2,40
 ^B3N,N,35,N,N
@@ -90,9 +90,9 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^XZ`,
   },
   {
-    name: 'Prix Commerce & Rayonnage',
+    name: 'Retail Shelf & Price Tag',
     category: 'Retail',
-    description: 'Étiquette gondole magasin avec prix en gros caractères et EAN-13',
+    description: 'Shelf pricing tag with bold price callout and EAN/UPC barcode',
     zpl: `^XA
 ^CI28
 ^PW600
@@ -101,10 +101,10 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^GB540,240,4,B,2^FS
 ^FO50,50
 ^A0N,30,30
-^FDCAFE PUR ARABICA BIO 250G^FS
+^FDORGANIC ARABICA COFFEE 250G^FS
 ^FO50,85
 ^A0N,20,20
-^FDOrigine Colombie - Torrefaction Artisanale^FS
+^FDColumbian Origin - Artisan Roast^FS
 ^FO50,120
 ^GB500,2,2,B,0^FS
 ^FO50,140
@@ -116,17 +116,17 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^FO375,155
 ^A0N,64,64
 ^FR
-^FD4.95€^FS
+^FD$4.95^FS
 ^FO380,225
 ^A0N,16,16
 ^FR
-^FD19.80 €/kg^FS
+^FD$19.80 /kg^FS
 ^XZ`,
   },
   {
-    name: 'Échantillon Médical / Laboratoire',
-    category: 'Santé',
-    description: 'Identification tube à essai avec QR Code Datamatrix et alertes',
+    name: 'Medical / Laboratory Specimen',
+    category: 'Healthcare',
+    description: 'Vial and specimen identification with QR code and patient ID alerts',
     zpl: `^XA
 ^CI28
 ^PW400
@@ -138,18 +138,18 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 ^FDQA,LAB-SERUM-2026-X89^FS
 ^FO130,30
 ^A0N,24,24
-^FDBIO-ANALYSES LAB^FS
+^FDBIO-ANALYSIS LAB^FS
 ^FO130,60
 ^A0N,22,22
 ^FDID: #8841-B9^FS
 ^FO130,90
 ^A0N,20,20
-^FDDate: 22/09/2026 08:30^FS
+^FDDate: 09/22/2026 08:30^FS
 ^FO30,130
 ^GB340,2,2,B,0^FS
 ^FO30,145
 ^A0N,20,20
-^FDTUBE EDTA - SANG TOTAL^FS
+^FDEDTA TUBE - WHOLE BLOOD^FS
 ^FO30,175
 ^BY2,3,40
 ^BCN,35,Y,N,N
@@ -170,14 +170,14 @@ export function getSavedProjects(): LabelProject[] {
 
 export function saveProject(project: LabelProject): void {
   try {
-    const list = getSavedProjects();
-    const existingIndex = list.findIndex((p) => p.id === project.id);
-    if (existingIndex >= 0) {
-      list[existingIndex] = project;
+    const projects = getSavedProjects();
+    const existingIdx = projects.findIndex((p) => p.id === project.id);
+    if (existingIdx >= 0) {
+      projects[existingIdx] = { ...project, updatedAt: Date.now() };
     } else {
-      list.unshift(project);
+      projects.unshift(project);
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
   } catch (err) {
     console.error('Failed to save project:', err);
   }
@@ -185,17 +185,19 @@ export function saveProject(project: LabelProject): void {
 
 export function deleteProject(id: string): void {
   try {
-    const list = getSavedProjects().filter((p) => p.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    const projects = getSavedProjects().filter((p) => p.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
   } catch (err) {
     console.error('Failed to delete project:', err);
   }
 }
 
-export function saveCurrentSession(zpl: string): void {
+export function saveCurrentSession(zplCode: string): void {
   try {
-    localStorage.setItem(AUTOSAVE_KEY, zpl);
-  } catch {}
+    localStorage.setItem(AUTOSAVE_KEY, zplCode);
+  } catch (err) {
+    console.error('Failed to auto-save session:', err);
+  }
 }
 
 export function getSavedSession(): string | null {

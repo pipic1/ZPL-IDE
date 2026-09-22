@@ -100,7 +100,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
     onAddElement({
       id,
       type: 'box',
-      name: filled ? 'Rectangle plein' : rounded ? 'Cadre arrondi' : 'Cadre',
+      name: filled ? 'Filled Block' : rounded ? 'Rounded Box' : 'Frame',
       x: nextElementPosition.x,
       y: nextElementPosition.y,
       width: 250,
@@ -116,7 +116,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
     onAddElement({
       id,
       type: 'line',
-      name: orientation === 'horizontal' ? 'Ligne Horiz.' : 'Ligne Vert.',
+      name: orientation === 'horizontal' ? 'Horiz. Line' : 'Vert. Line',
       x: nextElementPosition.x,
       y: nextElementPosition.y,
       width: orientation === 'horizontal' ? 300 : 3,
@@ -135,7 +135,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
           id="expand-toolbox-btn"
           onClick={() => setIsCollapsed(false)}
           className="w-7 h-7 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 flex items-center justify-center transition"
-          title="Développer la boîte à outils"
+          title="Expand toolbox"
         >
           <PanelLeftOpen className="w-4 h-4 text-emerald-400" />
         </button>
@@ -144,9 +144,9 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
 
         <div className="flex flex-col gap-1">
           <button
-            onClick={() => addText('TITRE', 40)}
+            onClick={() => addText('TITLE', 40)}
             className="w-7 h-7 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 flex items-center justify-center transition"
-            title="Texte (^A0)"
+            title="Text (^A0)"
           >
             <Type className="w-3.5 h-3.5 text-emerald-400" />
           </button>
@@ -170,7 +170,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
           <button
             onClick={() => addBox(false, false)}
             className="w-7 h-7 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 flex items-center justify-center transition"
-            title="Cadre (^GB)"
+            title="Box Frame (^GB)"
           >
             <Square className="w-3.5 h-3.5 text-zinc-400" />
           </button>
@@ -178,7 +178,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
           <button
             onClick={() => addLine('horizontal')}
             className="w-7 h-7 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 flex items-center justify-center transition"
-            title="Ligne Horiz. (^GB)"
+            title="Horiz. Line (^GB)"
           >
             <Minus className="w-3.5 h-3.5 text-zinc-400" />
           </button>
@@ -195,7 +195,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
         <div className="flex items-center gap-1.5">
           <Wrench className="w-3.5 h-3.5 text-emerald-400" />
           <span className="text-[10px] font-mono font-bold tracking-wider text-zinc-300 uppercase">
-            Outils ZPL
+            ZPL Tools
           </span>
         </div>
 
@@ -203,7 +203,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
           id="collapse-toolbox-btn"
           onClick={() => setIsCollapsed(true)}
           className="p-1 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
-          title="Réduire"
+          title="Collapse"
         >
           <PanelLeftClose className="w-3.5 h-3.5" />
         </button>
@@ -214,51 +214,51 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
         {/* Texts */}
         <div>
           <span className="text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-wider px-1 block mb-1">
-            Typographie
+            Typography
           </span>
           <div className="space-y-0.5">
             <button
-              onClick={() => addText('TITRE PRINCIPAL', 48)}
+              onClick={() => addText('TITLE HEADING', 48)}
               className="w-full h-7 px-2 rounded-sm bg-zinc-950/40 hover:bg-zinc-800 text-zinc-200 text-xs flex items-center justify-between border border-zinc-800/80 hover:border-zinc-700 transition"
             >
               <div className="flex items-center gap-2 truncate">
                 <Type className="w-3 h-3 text-emerald-400 shrink-0" />
-                <span className="text-[11px] truncate">Titre (48pt)</span>
+                <span className="text-[11px] truncate">Heading (48pt)</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^A0</span>
             </button>
 
             <button
-              onClick={() => addText('Texte standard', 28)}
+              onClick={() => addText('Standard text', 28)}
               className="w-full h-7 px-2 rounded-sm bg-zinc-950/40 hover:bg-zinc-800 text-zinc-200 text-xs flex items-center justify-between border border-zinc-800/80 hover:border-zinc-700 transition"
             >
               <div className="flex items-center gap-2 truncate">
                 <Type className="w-3 h-3 text-zinc-400 shrink-0" />
-                <span className="text-[11px] truncate">Standard (28pt)</span>
+                <span className="text-[11px] truncate">Body Text (28pt)</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^A0</span>
             </button>
 
             <button
-              onClick={() => addText('Libellé', 18)}
+              onClick={() => addText('Small label', 18)}
               className="w-full h-7 px-2 rounded-sm bg-zinc-950/40 hover:bg-zinc-800 text-zinc-200 text-xs flex items-center justify-between border border-zinc-800/80 hover:border-zinc-700 transition"
             >
               <div className="flex items-center gap-2 truncate">
                 <Type className="w-3 h-3 text-zinc-500 shrink-0" />
-                <span className="text-[11px] truncate">Petit (18pt)</span>
+                <span className="text-[11px] truncate">Small (18pt)</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^A0</span>
             </button>
 
             <button
-              onClick={() => addText('TEXTE INVERSÉ', 30, true)}
+              onClick={() => addText('INVERTED TEXT', 30, true)}
               className="w-full h-7 px-2 rounded-sm bg-zinc-950/40 hover:bg-zinc-800 text-zinc-200 text-xs flex items-center justify-between border border-zinc-800/80 hover:border-zinc-700 transition"
             >
               <div className="flex items-center gap-2 truncate">
                 <span className="w-3 h-3 rounded-xs bg-zinc-200 text-zinc-950 text-[7px] font-mono font-black flex items-center justify-center shrink-0">
                   FR
                 </span>
-                <span className="text-[11px] truncate">Inversé</span>
+                <span className="text-[11px] truncate">Inverted Text</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^FR</span>
             </button>
@@ -268,7 +268,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
         {/* Barcodes */}
         <div>
           <span className="text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-wider px-1 block mb-1">
-            Codes-barres
+            Barcodes
           </span>
           <div className="space-y-0.5">
             <button
@@ -309,7 +309,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
         {/* Graphics */}
         <div>
           <span className="text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-wider px-1 block mb-1">
-            Formes & Cadres
+            Shapes & Frames
           </span>
           <div className="space-y-0.5">
             <button
@@ -318,7 +318,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
             >
               <div className="flex items-center gap-2 truncate">
                 <Square className="w-3 h-3 text-zinc-400 shrink-0" />
-                <span className="text-[11px] truncate">Cadre rectangle</span>
+                <span className="text-[11px] truncate">Rectangle Frame</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^GB</span>
             </button>
@@ -329,7 +329,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
             >
               <div className="flex items-center gap-2 truncate">
                 <div className="w-3 h-3 border border-zinc-400 rounded-xs shrink-0" />
-                <span className="text-[11px] truncate">Cadre arrondi</span>
+                <span className="text-[11px] truncate">Rounded Box</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^GB</span>
             </button>
@@ -340,7 +340,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
             >
               <div className="flex items-center gap-2 truncate">
                 <div className="w-3 h-3 bg-zinc-300 rounded-none shrink-0" />
-                <span className="text-[11px] truncate">Bloc plein</span>
+                <span className="text-[11px] truncate">Filled Block</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^GB</span>
             </button>
@@ -351,7 +351,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
             >
               <div className="flex items-center gap-2 truncate">
                 <Minus className="w-3 h-3 text-zinc-400 shrink-0" />
-                <span className="text-[11px] truncate">Ligne Horiz.</span>
+                <span className="text-[11px] truncate">Horiz. Line</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^GB</span>
             </button>
@@ -362,7 +362,7 @@ export const ElementPalette: React.FC<ElementPaletteProps> = ({
             >
               <div className="flex items-center gap-2 truncate">
                 <div className="w-0.5 h-3 bg-zinc-400 shrink-0" />
-                <span className="text-[11px] truncate">Ligne Vert.</span>
+                <span className="text-[11px] truncate">Vert. Line</span>
               </div>
               <span className="text-[9px] font-mono text-zinc-500">^GB</span>
             </button>

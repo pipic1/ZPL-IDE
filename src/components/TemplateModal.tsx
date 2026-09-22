@@ -27,7 +27,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
           <div className="flex items-center gap-2">
             <LayoutTemplate className="w-4 h-4 text-emerald-400" />
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-200">
-              Modèles d'étiquettes ZPL
+              ZPL Label Templates
             </h2>
           </div>
           <button
@@ -46,9 +46,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 w-7 h-7 rounded-sm bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition shrink-0">
-                  {tmpl.category === 'Logistique' ? (
+                  {tmpl.category === 'Logistics' ? (
                     <Truck className="w-3.5 h-3.5" />
-                  ) : tmpl.category === 'Industrie' ? (
+                  ) : tmpl.category === 'Manufacturing' ? (
                     <Tag className="w-3.5 h-3.5" />
                   ) : tmpl.category === 'Retail' ? (
                     <ShoppingCart className="w-3.5 h-3.5" />
@@ -74,9 +74,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                   onSelectTemplate(tmpl.zpl);
                   onClose();
                 }}
-                className="px-3 py-1.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-emerald-400 hover:text-emerald-300 font-mono text-xs border border-zinc-700 transition shrink-0"
+                className="px-3 py-1.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-emerald-400 hover:text-emerald-300 font-mono text-xs border border-zinc-700 transition shrink-0 whitespace-nowrap"
               >
-                Charger
+                Load
               </button>
             </div>
           ))}
@@ -85,9 +85,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
         <div className="pt-2.5 border-t border-zinc-800 flex justify-end">
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-sm text-xs transition font-mono"
+            className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-sm text-xs transition font-mono whitespace-nowrap"
           >
-            Fermer
+            Close
           </button>
         </div>
       </div>

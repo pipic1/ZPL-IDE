@@ -155,24 +155,24 @@ export default function App() {
 
   // Exports
   const handleExportZpl = () => {
-    downloadZplFile(state.zplCode, `etiquette_${Date.now()}.zpl`);
+    downloadZplFile(state.zplCode, `label_${Date.now()}.zpl`);
   };
 
   const handleExportPng = () => {
     if (svgRef.current) {
-      downloadPng(svgRef.current, state.ast, `etiquette_${Date.now()}.png`, 2);
+      downloadPng(svgRef.current, state.ast, `label_${Date.now()}.png`, 2);
     }
   };
 
   const handleExportSvg = () => {
     if (svgRef.current) {
-      downloadSvg(svgRef.current, `etiquette_${Date.now()}.svg`);
+      downloadSvg(svgRef.current, `label_${Date.now()}.svg`);
     }
   };
 
   const handleExportPdf = () => {
     if (svgRef.current) {
-      downloadPdf(svgRef.current, state.ast, `etiquette_${Date.now()}.pdf`);
+      downloadPdf(svgRef.current, state.ast, `label_${Date.now()}.pdf`);
     }
   };
 

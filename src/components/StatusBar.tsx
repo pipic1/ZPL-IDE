@@ -29,7 +29,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
 
   return (
     <footer className="h-6 bg-zinc-900 border-t border-zinc-800 px-3 flex items-center justify-between text-[11px] text-zinc-400 font-mono select-none shrink-0 z-30">
-      {/* Left items: Engine & Selection */}
+      {/* Left items: Engine & Selection & Coordinates */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 text-zinc-300">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
@@ -41,10 +41,10 @@ export const StatusBar: React.FC<StatusBarProps> = ({
         <span>
           {selectedCount > 0 ? (
             <span className="text-emerald-400">
-              {selectedCount} sélectionné{selectedCount > 1 ? 's' : ''} ({elementCount} au total)
+              {selectedCount} selected ({elementCount} total)
             </span>
           ) : (
-            <span>{elementCount} objet{elementCount > 1 ? 's' : ''}</span>
+            <span>{elementCount} element{elementCount > 1 ? 's' : ''}</span>
           )}
         </span>
 
@@ -60,7 +60,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
         )}
       </div>
 
-      {/* Right items: Format, DPI, Zoom, Unit, Encoding */}
+      {/* Right items: Format, DPI, Zoom, Grid, Encoding */}
       <div className="flex items-center gap-3">
         <span>
           {dimensions.widthDots}×{dimensions.heightDots} pt ({widthMm}×{heightMm} mm)
@@ -78,7 +78,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
 
         <span className="text-zinc-700">|</span>
 
-        <span>Grille: {snapOptions.gridSize}pt</span>
+        <span>Grid: {snapOptions.gridSize}pt</span>
 
         <span className="text-zinc-700">|</span>
 
