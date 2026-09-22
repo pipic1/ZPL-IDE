@@ -1,0 +1,6 @@
+{
+  "name": "ZPL Studio - WYSIWYG & Code Editor",
+  "description": "Éditeur visuel WYSIWYG et code ZPL bidirectionnel en temps réel pour étiquettes thermiques Zebra.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Custom dark technical scrollbar theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(95, 95, 95) rgb(24, 24, 27);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(24, 24, 27);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(63, 63, 70);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(95, 95, 95);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgb(24, 24, 27);
+}
