@@ -99,14 +99,14 @@ export const Rulers: React.FC<RulersProps> = ({
         <button
           onClick={onToggleUnit}
           title={`Active unit: ${unit === 'dots' ? 'Dots (pt)' : 'Millimeters (mm)'}. Click to toggle.`}
-          className="w-6 h-6 bg-zinc-900 hover:bg-zinc-800 border-r border-b border-zinc-700/80 text-[10px] font-bold font-mono text-emerald-400 flex items-center justify-center shrink-0 transition"
+          className="w-6 h-6 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-900 dark:hover:bg-zinc-800 border-r border-b border-zinc-300 dark:border-zinc-700/80 text-[10px] font-bold font-mono text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 transition"
         >
           {unit === 'dots' ? 'pt' : 'mm'}
         </button>
 
         {/* Top Horizontal Ruler */}
         <div
-          className="h-6 bg-zinc-900 border-b border-zinc-700/80 relative overflow-hidden shrink-0"
+          className="h-6 bg-zinc-200/90 dark:bg-zinc-900 border-b border-zinc-300 dark:border-zinc-700/80 relative overflow-hidden shrink-0"
           style={{ width: `${widthDots * zoom}px` }}
         >
           <svg
@@ -123,14 +123,14 @@ export const Rulers: React.FC<RulersProps> = ({
                     y1={t.isMajor ? 10 : 17}
                     x2="0"
                     y2={RULER_THICKNESS}
-                    stroke="#52525b"
+                    className="stroke-zinc-400 dark:stroke-zinc-600"
                     strokeWidth={t.isMajor ? 1 : 0.75}
                   />
                   {t.isMajor && t.label && (
                     <text
                       x="3"
                       y="10"
-                      fill="#a1a1aa"
+                      className="fill-zinc-600 dark:fill-zinc-400"
                       fontSize="9"
                       fontFamily="monospace"
                       fontWeight="500"
@@ -149,7 +149,7 @@ export const Rulers: React.FC<RulersProps> = ({
                 y1="0"
                 x2={cursorPos.x * zoom}
                 y2={RULER_THICKNESS}
-                stroke="#10b981"
+                className="stroke-emerald-600 dark:stroke-emerald-500"
                 strokeWidth="1.5"
               />
             )}
@@ -161,7 +161,7 @@ export const Rulers: React.FC<RulersProps> = ({
       <div className="flex">
         {/* Left Vertical Ruler */}
         <div
-          className="w-6 bg-zinc-900 border-r border-zinc-700/80 relative overflow-hidden shrink-0"
+          className="w-6 bg-zinc-200/90 dark:bg-zinc-900 border-r border-zinc-300 dark:border-zinc-700/80 relative overflow-hidden shrink-0"
           style={{ height: `${heightDots * zoom}px` }}
         >
           <svg
@@ -178,14 +178,14 @@ export const Rulers: React.FC<RulersProps> = ({
                     y1="0"
                     x2={RULER_THICKNESS}
                     y2="0"
-                    stroke="#52525b"
+                    className="stroke-zinc-400 dark:stroke-zinc-600"
                     strokeWidth={t.isMajor ? 1 : 0.75}
                   />
                   {t.isMajor && t.label && (
                     <text
                       x="2"
                       y="-2"
-                      fill="#a1a1aa"
+                      className="fill-zinc-600 dark:fill-zinc-400"
                       fontSize="8"
                       fontFamily="monospace"
                       fontWeight="500"
@@ -204,7 +204,7 @@ export const Rulers: React.FC<RulersProps> = ({
                 y1={cursorPos.y * zoom}
                 x2={RULER_THICKNESS}
                 y2={cursorPos.y * zoom}
-                stroke="#10b981"
+                className="stroke-emerald-600 dark:stroke-emerald-500"
                 strokeWidth="1.5"
               />
             )}

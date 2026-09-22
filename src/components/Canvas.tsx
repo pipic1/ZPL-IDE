@@ -35,6 +35,7 @@ interface CanvasProps {
   onToggleRulerUnit: () => void;
   svgRef: React.RefObject<SVGSVGElement | null>;
   onCursorChange?: (pos: { x: number; y: number } | null) => void;
+  onContextMenu?: (pos: { x: number; y: number }, element: ZplElement | null) => void;
 }
 
 export const Canvas: React.FC<CanvasProps> = ({
@@ -52,10 +53,20 @@ export const Canvas: React.FC<CanvasProps> = ({
   onToggleRulerUnit,
   svgRef,
   onCursorChange,
+  onContextMenu,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
   const [activeGuides, setActiveGuides] = useState<AlignmentGuide[]>([]);
+
+  // Panning state for Space+drag or middle-click drag
+  const [isSpacePressed, setIsSpacePressed] = useState<boolean>(false);
+  const [panState, setPanState] = useState<{
+    startX: number;
+    startY: number;
+    scrollLeft: number;
+    scrollTop: number;
+  } | null>(null);
 
   // Dragging state
   const [dragState, setDragState] = useState<{
@@ -75,6 +86,10 @@ export const Canvas: React.FC<CanvasProps> = ({
       // Don't intercept if user is typing in an input or textarea
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
         return;
+      }
+
+      if (e.code === 'Space' && !e.repeat) {
+        setIsSpacePressed(true);
       }
 
       if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -115,8 +130,19 @@ export const Canvas: React.FC<CanvasProps> = ({
       }
     };
 
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpacePressed(false);
+        setPanState(null);
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, [selectedElementIds, ast.elements, onDeleteSelected, onDuplicateSelected, onUndo, onRedo, onUpdateElement]);
 
   // Calculate smart magnetic snapping & visual alignment guides
@@ -325,12 +351,12 @@ export const Canvas: React.FC<CanvasProps> = ({
             newY = Math.round(newY / snapOptions.gridSize) * snapOptions.gridSize;
           }
 
-          if (el.type === 'box' || el.type === 'line') {
+          if (el.type === 'box' || el.type === 'line' || el.type === 'graphic') {
             onUpdateElement(dragState.elementId, {
               x: Math.max(0, Math.round(newX)),
               y: Math.max(0, Math.round(newY)),
-              width: Math.max(2, Math.round(newW)),
-              height: Math.max(2, Math.round(newH)),
+              width: Math.max(8, Math.round(newW)),
+              height: Math.max(8, Math.round(newH)),
             });
           } else if (el.type === 'barcode128' || el.type === 'barcode39' || el.type === 'barcodeEAN13') {
             onUpdateElement(dragState.elementId, {
@@ -406,7 +432,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const renderLabelContent = () => (
     <div
       id="canvas-outer-wrapper"
-      className="relative shadow-[0_4px_30px_rgba(0,0,0,0.85)] border border-zinc-700 rounded-none transition-transform duration-75"
+      className="relative shadow-md dark:shadow-[0_4px_30px_rgba(0,0,0,0.85)] border border-zinc-300 dark:border-zinc-700 rounded-none transition-transform duration-75"
       style={{
         width: `${labelW * zoom}px`,
         height: `${labelH * zoom}px`,
@@ -419,6 +445,10 @@ export const Canvas: React.FC<CanvasProps> = ({
         height={labelH * zoom}
         className="w-full h-full bg-white block overflow-hidden cursor-crosshair"
         onMouseMove={handleMouseMove}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          onContextMenu?.({ x: e.clientX, y: e.clientY }, null);
+        }}
       >
         {/* Defs: Dotted and Lined Grid Patterns */}
         <defs>
@@ -484,6 +514,12 @@ export const Canvas: React.FC<CanvasProps> = ({
               id={`zpl-el-${el.id}`}
               className="cursor-move group"
               onMouseDown={(e) => handleElementMouseDown(e, el.id)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSelectElement(el.id, false);
+                onContextMenu?.({ x: e.clientX, y: e.clientY }, el);
+              }}
             >
               {renderElementSvg(el)}
 
@@ -576,38 +612,86 @@ export const Canvas: React.FC<CanvasProps> = ({
     </div>
   );
 
+  // Canvas Viewport Pan handlers
+  const handleViewportMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1 || isSpacePressed) {
+      e.preventDefault();
+      if (containerRef.current) {
+        setPanState({
+          startX: e.clientX,
+          startY: e.clientY,
+          scrollLeft: containerRef.current.scrollLeft,
+          scrollTop: containerRef.current.scrollTop,
+        });
+      }
+    }
+  };
+
+  const handleViewportMouseMove = (e: React.MouseEvent) => {
+    if (panState && containerRef.current) {
+      e.preventDefault();
+      const dx = e.clientX - panState.startX;
+      const dy = e.clientY - panState.startY;
+      containerRef.current.scrollLeft = panState.scrollLeft - dx;
+      containerRef.current.scrollTop = panState.scrollTop - dy;
+    }
+  };
+
+  const handleViewportMouseUp = () => {
+    setPanState(null);
+    handleMouseUp();
+  };
+
   return (
     <div
       ref={containerRef}
-      className="flex-1 bg-[#121214] overflow-auto relative flex flex-col items-center justify-center p-10 select-none"
-      onMouseUp={handleMouseUp}
+      id="canvas-viewport"
+      className={`flex-1 bg-zinc-200/50 dark:bg-[#121214] overflow-auto relative select-none ${
+        isSpacePressed ? (panState ? 'cursor-grabbing' : 'cursor-grab') : ''
+      }`}
+      onMouseDown={handleViewportMouseDown}
+      onMouseMove={handleViewportMouseMove}
+      onMouseUp={handleViewportMouseUp}
       onMouseLeave={() => {
-        handleMouseUp();
+        handleViewportMouseUp();
         setCursorPos(null);
         onCursorChange?.(null);
       }}
-      onClick={(e) => {
-        if (e.target === containerRef.current || (e.target as HTMLElement).id === 'canvas-outer-wrapper') {
-          onClearSelection();
-        }
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onContextMenu?.({ x: e.clientX, y: e.clientY }, null);
       }}
     >
-      {/* Rulers or Naked Canvas */}
-      {snapOptions.showRulers ? (
-        <Rulers
-          widthDots={labelW}
-          heightDots={labelH}
-          dpi={ast.dimensions.dpi}
-          zoom={zoom}
-          cursorPos={cursorPos}
-          unit={snapOptions.rulerUnit}
-          onToggleUnit={onToggleRulerUnit}
-        >
-          {renderLabelContent()}
-        </Rulers>
-      ) : (
-        renderLabelContent()
-      )}
+      <div
+        id="canvas-scroll-inner"
+        className="min-w-full min-h-full p-12 md:p-16 flex items-center justify-center w-max h-max"
+        onClick={(e) => {
+          if (
+            e.target === e.currentTarget ||
+            (e.target as HTMLElement).id === 'canvas-scroll-inner' ||
+            (e.target as HTMLElement).id === 'canvas-viewport'
+          ) {
+            onClearSelection();
+          }
+        }}
+      >
+        {/* Rulers or Naked Canvas */}
+        {snapOptions.showRulers ? (
+          <Rulers
+            widthDots={labelW}
+            heightDots={labelH}
+            dpi={ast.dimensions.dpi}
+            zoom={zoom}
+            cursorPos={cursorPos}
+            unit={snapOptions.rulerUnit}
+            onToggleUnit={onToggleRulerUnit}
+          >
+            {renderLabelContent()}
+          </Rulers>
+        ) : (
+          renderLabelContent()
+        )}
+      </div>
     </div>
   );
 };
@@ -627,6 +711,9 @@ function getElementBounds(el: ZplElement): { x: number; y: number; w: number; h:
     }
     case 'box':
     case 'line': {
+      return { x: el.x, y: el.y, w: el.width, h: el.height };
+    }
+    case 'graphic': {
       return { x: el.x, y: el.y, w: el.width, h: el.height };
     }
     case 'barcode128': {
@@ -863,6 +950,22 @@ function renderElementSvg(el: ZplElement) {
           <text x={size / 2} y={size / 2 + 4} textAnchor="middle" fontSize="10" fontFamily="monospace">
             DM
           </text>
+        </g>
+      );
+    }
+
+    case 'graphic': {
+      return (
+        <g transform={transform}>
+          <image
+            href={el.previewUrl || ''}
+            x={el.x}
+            y={el.y}
+            width={el.width}
+            height={el.height}
+            preserveAspectRatio="none"
+            style={{ imageRendering: 'pixelated' }}
+          />
         </g>
       );
     }

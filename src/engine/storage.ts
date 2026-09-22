@@ -161,7 +161,25 @@ export const BUILT_IN_TEMPLATES: { name: string; description: string; category: 
 export function getSavedProjects(): LabelProject[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
+    if (!raw) {
+      // Seed default library with built-in templates so the library is ready
+      const initial: LabelProject[] = BUILT_IN_TEMPLATES.map((tmpl, idx) => ({
+        id: `tpl_lib_${idx + 1}`,
+        name: tmpl.name,
+        updatedAt: Date.now() - (idx * 3600000 * 24),
+        zplCode: tmpl.zpl,
+        dimensions: {
+          widthDots: idx === 0 ? 812 : idx === 1 ? 812 : 406,
+          heightDots: idx === 0 ? 1218 : idx === 1 ? 812 : 203,
+          dpi: 203,
+          unit: 'dots',
+        },
+        lineCount: tmpl.zpl.split('\n').length,
+        elementCount: tmpl.zpl.split('^FO').length - 1,
+      }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
+      return initial;
+    }
     return JSON.parse(raw);
   } catch {
     return [];
@@ -175,11 +193,46 @@ export function saveProject(project: LabelProject): void {
     if (existingIdx >= 0) {
       projects[existingIdx] = { ...project, updatedAt: Date.now() };
     } else {
-      projects.unshift(project);
+      projects.unshift({ ...project, updatedAt: Date.now() });
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
   } catch (err) {
-    console.error('Failed to save project:', err);
+    console.error('Failed to save project to localStorage:', err);
+  }
+}
+
+export function renameProject(id: string, newName: string): void {
+  try {
+    const projects = getSavedProjects();
+    const target = projects.find((p) => p.id === id);
+    if (target) {
+      target.name = newName.trim();
+      target.updatedAt = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+    }
+  } catch (err) {
+    console.error('Failed to rename project:', err);
+  }
+}
+
+export function duplicateProject(id: string): LabelProject | null {
+  try {
+    const projects = getSavedProjects();
+    const target = projects.find((p) => p.id === id);
+    if (!target) return null;
+
+    const copy: LabelProject = {
+      ...target,
+      id: `proj_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`,
+      name: `${target.name} (Copy)`,
+      updatedAt: Date.now(),
+    };
+    projects.unshift(copy);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+    return copy;
+  } catch (err) {
+    console.error('Failed to duplicate project:', err);
+    return null;
   }
 }
 
@@ -189,6 +242,57 @@ export function deleteProject(id: string): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
   } catch (err) {
     console.error('Failed to delete project:', err);
+  }
+}
+
+/**
+ * Save file directly to computer disk as .zpl
+ */
+export async function saveToDisk(filename: string, content: string): Promise<boolean> {
+  const safeFilename = filename.trim().endsWith('.zpl')
+    ? filename.trim()
+    : `${filename.trim() || 'label_design'}.zpl`;
+
+  if (typeof window !== 'undefined' && 'showSaveFilePicker' in window) {
+    try {
+      const handle = await (window as any).showSaveFilePicker({
+        suggestedName: safeFilename,
+        types: [
+          {
+            description: 'ZPL Label Document (*.zpl)',
+            accept: {
+              'text/plain': ['.zpl', '.txt'],
+            },
+          },
+        ],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(content);
+      await writable.close();
+      return true;
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        return false; // User dismissed
+      }
+      // If permission or iframe denied, fallback to direct download below
+    }
+  }
+
+  // Universal browser download fallback
+  try {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = safeFilename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return true;
+  } catch (err) {
+    console.error('Failed to save to disk:', err);
+    return false;
   }
 }
 

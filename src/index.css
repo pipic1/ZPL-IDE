@@ -1,9 +1,16 @@
 @import "tailwindcss";
 
-/* Custom dark technical scrollbar theme */
-* {
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom scrollbar theme */
+.dark * {
   scrollbar-width: thin;
   scrollbar-color: rgb(95, 95, 95) rgb(24, 24, 27);
+}
+
+html:not(.dark) * {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(180, 180, 180) rgb(244, 244, 245);
 }
 
 ::-webkit-scrollbar {
@@ -11,19 +18,37 @@
   height: 7px;
 }
 
-::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
   background: rgb(24, 24, 27);
 }
 
-::-webkit-scrollbar-thumb {
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: rgb(244, 244, 245);
+}
+
+.dark ::-webkit-scrollbar-thumb {
   background: rgb(63, 63, 70);
   border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgb(200, 200, 205);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgb(95, 95, 95);
 }
 
-::-webkit-scrollbar-corner {
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgb(160, 160, 165);
+}
+
+.dark ::-webkit-scrollbar-corner {
   background: rgb(24, 24, 27);
 }
+
+html:not(.dark) ::-webkit-scrollbar-corner {
+  background: rgb(244, 244, 245);
+}
+

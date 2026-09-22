@@ -160,6 +160,16 @@ function serializeElement(el: ZplElement): string[] {
       break;
     }
 
+    case 'graphic': {
+      lines.push(`^FO${x},${y}`);
+      const b = el.binaryByteCount || (el.bytesPerRow * el.height);
+      const c = el.graphicFieldCount || b;
+      const d = el.bytesPerRow || Math.ceil(el.width / 8);
+      lines.push(`^GFA,${b},${c},${d},${el.data}^FS`);
+      lines.push('');
+      break;
+    }
+
     case 'raw': {
       lines.push(el.rawZpl);
       lines.push('');

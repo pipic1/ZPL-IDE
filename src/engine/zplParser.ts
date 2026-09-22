@@ -9,8 +9,10 @@ import {
   ZplBoxElement,
   ZplDocumentAST,
   ZplElement,
+  ZplGraphicElement,
   ZplTextElement,
 } from '../types/zpl';
+import { zplHexToDataUrl } from './imageConverter';
 
 /**
  * Robust ZPL Lexer / Parser
@@ -201,7 +203,38 @@ export function parseZpl(zpl: string): { ast: ZplDocumentAST; errors: string[] }
       continue;
     }
 
-    // 5. Standard Text (^A...)
+    // 5. Check for Graphic Field (^GF)
+    const gfMatch = content.match(/\^GF\s*([A-Za-z])?\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9A-Fa-f\s]+)/i);
+    if (gfMatch) {
+      const binaryByteCount = parseInt(gfMatch[2], 10) || 0;
+      const graphicFieldCount = parseInt(gfMatch[3], 10) || binaryByteCount;
+      const bytesPerRow = parseInt(gfMatch[4], 10) || 1;
+      const rawHex = gfMatch[5].replace(/[\s\r\n]/g, '');
+
+      const height = bytesPerRow > 0 ? Math.round(binaryByteCount / bytesPerRow) : 50;
+      const width = bytesPerRow * 8;
+      const previewUrl = zplHexToDataUrl(bytesPerRow, height, rawHex);
+
+      const graphicEl: ZplGraphicElement = {
+        id,
+        type: 'graphic',
+        name: `Image (${width}×${height})`,
+        x,
+        y,
+        width: Math.max(8, width),
+        height: Math.max(8, height),
+        format: 'A',
+        binaryByteCount,
+        graphicFieldCount,
+        bytesPerRow,
+        data: rawHex,
+        previewUrl,
+      };
+      elements.push(graphicEl);
+      continue;
+    }
+
+    // 6. Standard Text (^A...)
     // Pattern like ^A0N,30,30 or ^AC,40,40
     const aMatch = content.match(/\^A([0-9A-Z])([NRIBnrib])?(?:\s*,\s*([0-9]+))?(?:\s*,\s*([0-9]+))?/i);
     const fontName = aMatch ? aMatch[1].toUpperCase() : '0';

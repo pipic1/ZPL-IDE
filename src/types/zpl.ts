@@ -26,6 +26,7 @@ export type ZplElementType =
   | 'barcodeEAN13'
   | 'qrcode'
   | 'datamatrix'
+  | 'graphic'
   | 'raw';
 
 export interface BaseZplElement {
@@ -108,6 +109,18 @@ export interface ZplDataMatrixElement extends BaseZplElement {
   height: number;
 }
 
+export interface ZplGraphicElement extends BaseZplElement {
+  type: 'graphic';
+  format: 'A';
+  binaryByteCount: number;
+  graphicFieldCount: number;
+  bytesPerRow: number;
+  data: string; // ASCII hex string
+  width: number; // width in dots
+  height: number; // height in dots
+  previewUrl?: string; // data URL (base64 PNG) for fast rendering
+}
+
 export interface ZplRawElement extends BaseZplElement {
   type: 'raw';
   rawZpl: string;
@@ -121,6 +134,7 @@ export type ZplElement =
   | ZplBarcodeEAN13Element
   | ZplQrCodeElement
   | ZplDataMatrixElement
+  | ZplGraphicElement
   | ZplRawElement;
 
 export interface ZplDocumentAST {
@@ -155,6 +169,8 @@ export interface LabelProject {
   zplCode: string;
   dimensions: LabelDimensions;
   thumbnail?: string;
+  elementCount?: number;
+  lineCount?: number;
 }
 
 export interface SnapOptions {
